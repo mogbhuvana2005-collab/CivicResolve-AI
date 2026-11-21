@@ -1,0 +1,13 @@
+[
+    {
+        "complaint_id": "CR20261119140131",
+        "name": "Mohan",
+        "mobile": "9876543210",
+        "category": "Drainage Problem",
+        "location": "anna nagar , chenni",
+        "description": "Garbage has not been collected from our street for the past five days. Waste is accumulating near residential houses and producing a bad smell. It is causing inconvenience to residents and may create health problems. Kindly arrange immediate garbage collection and clean the area.",
+        "ai_analysis": "### Problem Summary:\nA resident in Anna Nagar, Chennai, has reported that garbage collection has not occurred for the past five days. As a result, waste is accumulating near residential houses, creating a foul smell and posing potential health risks to the community. This situation is causing significant inconvenience to the residents.\n\n### Suggested Solution:\n1. **Immediate Garbage Collection**: Arrange for immediate garbage collection to clear the accumulated waste from the street. This should be carried out by deploying additional garbage collection vehicles to the area.\n   \n2. **Regular Inspection and Maintenance**: Implement regular inspections of the drainage and waste management systems in Anna Nagar to prevent future accumulations. Schedule periodic maintenance checks to ensure that the waste management infrastructure is functioning properly.\n\n3. **Community Awareness Campaigns**: Conduct community awareness campaigns to educate residents on proper waste disposal practices and the importance of keeping the locality clean. This can help reduce the amount of waste generated and ensure more responsible waste management practices.\n\n4. **Enhanced Monitoring**: Strengthen the monitoring mechanisms to ensure timely garbage collection. Use technology, such as mobile apps, for residents to report waste collection issues in real time, enabling quicker responses.\n\n### Responsible Government Department:\nThe primary responsible department for waste management in Chennai is the Greater Chennai Corporation (GCC), specifically the Public Health Department.\n\n### Recommended Priority:\n**High**\n\nThe accumulation of garbage poses immediate health risks and causes significant inconvenience to residents. Prompt action is required to mitigate the adverse effects of this problem.\n\nBy addressing this issue swiftly and implementing preventive measures, the local authorities can maintain community health and ensure a cleaner environment.",
+        "status": "Pending",
+        "created_at": "2026-11-19T14:01:31.334088"
+    }
+]

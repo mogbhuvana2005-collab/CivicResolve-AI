@@ -1,0 +1,661 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CivicResolve AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f4ff;
+            color: #263238;
+        }
+
+        header {
+            background: linear-gradient(90deg, #263c91, #7654d6);
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000012;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 12px;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .stat-card p {
+            margin: 0;
+            font-size: 30px;
+            font-weight: bold;
+            color: #3949ab;
+        }
+
+        .panel {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000012;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #edf0ff;
+            color: #263c91;
+        }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .progress {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .resolved {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        button {
+            padding: 9px 13px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .view-btn {
+            background: #3949ab;
+            color: white;
+        }
+
+        .view-btn:hover {
+            background: #263c91;
+        }
+
+        .update-btn {
+            background: #7654d6;
+            color: white;
+        }
+
+        .message {
+            padding: 15px;
+            text-align: center;
+            color: #666;
+        }
+
+        /* Details Popup */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px #00000030;
+            animation: popup 0.2s ease;
+        }
+
+        @keyframes popup {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            color: #3949ab;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: transparent;
+            color: #555;
+            font-size: 25px;
+            padding: 0 5px;
+        }
+
+        .detail-row {
+            padding: 11px 0;
+            border-bottom: 1px solid #eee;
+            overflow-wrap: anywhere;
+        }
+
+        .detail-row strong {
+            display: inline-block;
+            width: 115px;
+            color: #3949ab;
+        }
+
+        .close-bottom {
+            margin-top: 20px;
+            background: #3949ab;
+            color: white;
+            width: 100%;
+            padding: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 12px;
+            }
+
+            .panel {
+                padding: 14px;
+            }
+
+            .detail-row strong {
+                display: block;
+                width: auto;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>CivicResolve AI</h1>
+    <p>Admin Dashboard - Complaint Management</p>
+    <a href="index.html">← Back to Home</a>
+</header>
+
+<div class="container">
+
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Total Complaints</h3>
+            <p id="total">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Pending</h3>
+            <p id="pending">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>In Progress</h3>
+            <p id="progress">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Resolved</h3>
+            <p id="resolved">0</p>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Registered Complaints</h2>
+
+        <div class="filters">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by ID, name or location..."
+                oninput="filterComplaints()"
+            >
+
+            <select id="categoryFilter" onchange="filterComplaints()">
+                <option value="">All Categories</option>
+                <option value="Road Damage">Road Damage</option>
+                <option value="Water Supply">Water Supply</option>
+                <option value="Garbage">Garbage</option>
+                <option value="Electricity">Electricity</option>
+                <option value="Street Light">Street Light</option>
+            </select>
+
+            <select id="statusFilter" onchange="filterComplaints()">
+                <option value="">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Complaint ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Update Status</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+
+                <tbody id="complaintTable">
+                    <tr>
+                        <td colspan="7" class="message">Loading complaints...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p id="errorMessage" class="message"></p>
+    </div>
+</div>
+
+<!-- Complaint Details Popup -->
+
+<div class="modal" id="detailsModal" onclick="closeDetails(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+
+        <div class="modal-header">
+            <h2>Complaint Details</h2>
+            <button class="close-btn" onclick="closeDetails()">×</button>
+        </div>
+
+        <div class="detail-row">
+            <strong>Complaint ID:</strong>
+            <span id="detailId">-</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Name:</strong>
+            <span id="detailName">-</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Category:</strong>
+            <span id="detailCategory">-</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Location:</strong>
+            <span id="detailLocation">-</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Status:</strong>
+            <span id="detailStatus">-</span>
+        </div>
+
+        <button class="close-bottom" onclick="closeDetails()">
+            Close
+        </button>
+
+    </div>
+</div>
+
+<script>
+
+    let allComplaints = [];
+
+    // Load complaints from Flask backend
+
+    async function loadComplaints() {
+        const table = document.getElementById("complaintTable");
+        const error = document.getElementById("errorMessage");
+
+        try {
+            error.textContent = "";
+
+            const response = await fetch(
+                "http://127.0.0.1:5000/api/admin/complaints"
+            );
+
+            if (!response.ok) {
+                throw new Error("Server returned error " + response.status);
+            }
+
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.error || "Unable to load complaints");
+            }
+
+            const stats = data.statistics || {};
+
+            document.getElementById("total").textContent =
+                stats.total ?? 0;
+
+            document.getElementById("pending").textContent =
+                stats.pending ?? 0;
+
+            document.getElementById("progress").textContent =
+                stats.progress ?? 0;
+
+            document.getElementById("resolved").textContent =
+                stats.resolved ?? 0;
+
+            allComplaints = Array.isArray(data.complaints)
+                ? data.complaints
+                : [];
+
+            displayComplaints(allComplaints);
+
+        } catch (error) {
+            table.innerHTML = `
+                <tr>
+                    <td colspan="7" class="message">
+                        Unable to load complaints.
+                    </td>
+                </tr>
+            `;
+
+            errorMessage.textContent =
+                "Error: " + error.message +
+                ". Please check whether Flask is running.";
+        }
+    }
+
+    // Display complaint records
+
+    function displayComplaints(complaints) {
+        const table = document.getElementById("complaintTable");
+
+        if (!complaints.length) {
+            table.innerHTML = `
+                <tr>
+                    <td colspan="7" class="message">
+                        No complaints found.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        table.innerHTML = "";
+
+        complaints.forEach((complaint) => {
+            const id = complaint.complaint_id ?? "";
+            const name = complaint.name ?? "";
+            const category = complaint.category ?? "";
+            const location = complaint.location ?? "";
+            const status = complaint.status ?? "Pending";
+
+            const row = document.createElement("tr");
+
+            const values = [id, name, category, location];
+
+            values.forEach(value => {
+                const cell = document.createElement("td");
+                cell.textContent = value;
+                row.appendChild(cell);
+            });
+
+            const statusCell = document.createElement("td");
+            const statusLabel = document.createElement("span");
+
+            statusLabel.className = "status " + getStatusClass(status);
+            statusLabel.textContent = status;
+
+            statusCell.appendChild(statusLabel);
+            row.appendChild(statusCell);
+
+            const updateCell = document.createElement("td");
+
+            const select = document.createElement("select");
+
+            ["Pending", "In Progress", "Resolved"].forEach(optionValue => {
+                const option = document.createElement("option");
+                option.value = optionValue;
+                option.textContent = optionValue;
+                select.appendChild(option);
+            });
+
+            select.value = status;
+
+            const updateButton = document.createElement("button");
+            updateButton.className = "update-btn";
+            updateButton.textContent = "Update";
+
+            updateButton.addEventListener("click", () => {
+                updateStatus(id, select.value);
+            });
+
+            updateCell.appendChild(select);
+            updateCell.appendChild(document.createElement("br"));
+            updateCell.appendChild(updateButton);
+
+            row.appendChild(updateCell);
+
+            const detailsCell = document.createElement("td");
+
+            const viewButton = document.createElement("button");
+            viewButton.className = "view-btn";
+            viewButton.textContent = "View Details";
+
+            viewButton.addEventListener("click", () => {
+                viewComplaint(id);
+            });
+
+            detailsCell.appendChild(viewButton);
+            row.appendChild(detailsCell);
+
+            table.appendChild(row);
+        });
+    }
+
+    // Status CSS class
+
+    function getStatusClass(status) {
+        if (status === "Resolved") return "resolved";
+        if (status === "In Progress") return "progress";
+        return "pending";
+    }
+
+    // Search and filter complaints
+
+    function filterComplaints() {
+        const search = document
+            .getElementById("searchInput")
+            .value.toLowerCase();
+
+        const category = document.getElementById("categoryFilter").value;
+        const status = document.getElementById("statusFilter").value;
+
+        const filtered = allComplaints.filter(complaint => {
+            const id = String(complaint.complaint_id ?? "").toLowerCase();
+            const name = String(complaint.name ?? "").toLowerCase();
+            const location = String(complaint.location ?? "").toLowerCase();
+
+            const matchesSearch =
+                id.includes(search) ||
+                name.includes(search) ||
+                location.includes(search);
+
+            const matchesCategory =
+                !category || complaint.category === category;
+
+            const matchesStatus =
+                !status || complaint.status === status;
+
+            return matchesSearch && matchesCategory && matchesStatus;
+        });
+
+        displayComplaints(filtered);
+    }
+
+    // Update complaint status
+
+    async function updateStatus(id, status) {
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:5000/api/admin/update-status/${encodeURIComponent(id)}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ status: status })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || "Status update failed");
+            }
+
+            alert("Complaint status updated successfully!");
+
+            await loadComplaints();
+
+        } catch (error) {
+            alert("Error updating status: " + error.message);
+        }
+    }
+
+    // Open professional complaint details popup
+
+    function viewComplaint(id) {
+        const complaint = allComplaints.find(
+            item => String(item.complaint_id) === String(id)
+        );
+
+        if (!complaint) {
+            alert("Complaint details not found.");
+            return;
+        }
+
+        document.getElementById("detailId").textContent =
+            complaint.complaint_id ?? "-";
+
+        document.getElementById("detailName").textContent =
+            complaint.name ?? "-";
+
+        document.getElementById("detailCategory").textContent =
+            complaint.category ?? "-";
+
+        document.getElementById("detailLocation").textContent =
+            complaint.location ?? "-";
+
+        document.getElementById("detailStatus").textContent =
+            complaint.status ?? "-";
+
+        document.getElementById("detailsModal").style.display = "flex";
+    }
+
+    // Close popup
+
+    function closeDetails(event) {
+        if (event && event.target.id !== "detailsModal") {
+            return;
+        }
+
+        document.getElementById("detailsModal").style.display = "none";
+    }
+
+    // Close popup using Escape key
+
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            closeDetails();
+        }
+    });
+
+    // Load data when page opens
+
+    loadComplaints();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register Complaint - CivicResolve AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dce7ff, #eadfff);
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            background: white;
+            max-width: 550px;
+            margin: 30px auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px #b9c4df;
+        }
+        h1 {
+            text-align: center;
+            color: #35469c;
+        }
+        p {
+            text-align: center;
+            color: #666;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 22px;
+            background: #5846cf;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #35258e;
+        }
+        button:disabled {
+            background: #999;
+            cursor: wait;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Register Complaint</h1>
+    <p>Help us make your city better!</p>
+
+    <form id="complaintForm">
+
+        <label>Citizen Name</label>
+        <input type="text" id="name"
+               placeholder="Enter your name" required>
+
+        <label>Mobile Number</label>
+        <input type="tel" id="mobile"
+               placeholder="Enter mobile number" required>
+
+        <label>Complaint Category</label>
+        <select id="category" required>
+            <option value="">Select an issue</option>
+            <option>Road Damage</option>
+            <option>Water Supply</option>
+            <option>Garbage Management</option>
+            <option>Street Light</option>
+            <option>Drainage Problem</option>
+            <option>Other</option>
+        </select>
+
+        <label>Complaint Location</label>
+        <input type="text" id="location"
+               placeholder="Enter your location" required>
+
+        <label>Complaint Description</label>
+        <textarea id="description" rows="4"
+                  placeholder="Describe your problem..."
+                  required></textarea>
+
+        <button type="submit" id="submitBtn">
+            Submit Complaint
+        </button>
+    </form>
+
+    <div id="result"></div>
+</div>
+
+<script>
+document.getElementById("complaintForm")
+.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const button = document.getElementById("submitBtn");
+    const result = document.getElementById("result");
+
+    button.disabled = true;
+    button.textContent = "Analysing complaint...";
+    result.style.display = "block";
+    result.textContent = "Please wait. CivicResolve AI is analysing your complaint.";
+
+    const complaint = {
+        name: document.getElementById("name").value,
+        mobile: document.getElementById("mobile").value,
+        category: document.getElementById("category").value,
+        location: document.getElementById("location").value,
+        description: document.getElementById("description").value
+    };
+
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/register-complaint",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(complaint)
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Complaint submission failed");
+        }
+
+        result.textContent =
+            "Complaint submitted successfully!\n\n" +
+            "Complaint ID: " + data.complaint_id + "\n\n" +
+            "AI Analysis:\n" + data.ai_analysis;
+
+        document.getElementById("complaintForm").reset();
+
+    } catch (error) {
+        result.textContent =
+            "Error: " + error.message +
+            "\n\nPlease check whether the Python backend is running.";
+    } finally {
+        button.disabled = false;
+        button.textContent = "Submit Complaint";
+    }
+});
+</script>
+
+</body>
+</html>

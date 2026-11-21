@@ -1,0 +1,165 @@
+<!DOCTYPE html><html>
+<head>
+    <title>CivicResolve AI</title><style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f0f4ff;
+        color: #26345c;
+    }
+
+    header {
+        background: linear-gradient(90deg, #263c91, #7654d6);
+        color: white;
+        padding: 22px 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    header h1 {
+        margin: 0;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: bold;
+    }
+
+    .hero {
+        text-align: center;
+        padding: 85px 20px;
+        background: linear-gradient(135deg, #dce7ff, #eadfff);
+    }
+
+    .hero h2 {
+        font-size: 40px;
+        color: #263c91;
+    }
+
+    .hero p {
+        font-size: 18px;
+        color: #555;
+    }
+
+    button {
+        padding: 14px 25px;
+        border: none;
+        border-radius: 8px;
+        background: #5846cf;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px;
+    }
+
+    button:hover {
+        background: #35258e;
+    }
+
+    .services {
+        padding: 45px 25px;
+        text-align: center;
+    }
+
+    .service-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 22px;
+        margin-top: 30px;
+    }
+
+    .card {
+        background: white;
+        width: 210px;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px #ccd3e5;
+    }
+
+    .card h3 {
+        color: #5846cf;
+    }
+
+    footer {
+        background: #263c91;
+        color: white;
+        text-align: center;
+        padding: 18px;
+        margin-top: 35px;
+    }
+</style>
+
+</head>
+<body>
+<header>
+    <h1>🏙️ CivicResolve AI</h1>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#services">Services</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="admin.html">Admin Dashboard</a>
+    </nav>
+</header>
+
+<section class="hero">
+
+    <h2>Smart Civic Complaint Resolution</h2>
+
+    <p>
+        Report civic issues easily.
+        Let AI help make your city better!
+    </p>
+
+    <button 
+    onclick="window.location.href='complaint.html'">
+      Register Complaint
+    </button>
+
+    <button onclick="window.location.href='track.html'">
+    Track Complaint
+    </button>
+
+</section>
+
+<section class="services" id="services">
+
+    <h2>Our Civic Services</h2>
+
+    <div class="service-container">
+
+        <div class="card">
+            <h3>🛣️ Road Issues</h3>
+            <p>Report damaged roads and potholes.</p>
+        </div>
+
+        <div class="card">
+            <h3>💧 Water Supply</h3>
+            <p>Report water shortages and leakage.</p>
+        </div>
+
+        <div class="card">
+            <h3>🗑️ Garbage</h3>
+            <p>Report waste disposal problems.</p>
+        </div>
+
+        <div class="card">
+            <h3>💡 Street Lights</h3>
+            <p>Report damaged street lights.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    <p>© 2026 CivicResolve AI | Building Smarter Cities</p>
+</footer>
+
+</body>
+</html>
